@@ -14,8 +14,14 @@ export function calculateTotal(expenses: Expense[]): number {
 /**
  * Format currency amount
  */
-export function formatCurrency(amount: number): string {
-  return `$${amount.toFixed(2)}`;
+export function formatCurrency(amount: number | string): string {
+  const numericAmount = Number(amount);
+
+  if (!Number.isFinite(numericAmount)) {
+    return "$0.00";
+  }
+
+  return `$${numericAmount.toFixed(2)}`;
 }
 
 /**

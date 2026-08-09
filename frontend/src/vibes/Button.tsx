@@ -72,6 +72,7 @@ export function Button({
     alignItems: "center",
     justifyContent: "center",
     gap: "0.5rem",
+    marginRight: "5px",
   };
 
   return (
