@@ -3,9 +3,17 @@ class Api::ExpensesController < ApplicationController
     expenses = Expense.includes(:category).order(date: :desc)
 
     if params[:year].present? && params[:month].present?
-      year = params[:year].to_i
-      month = params[:month].to_i
-
+      begin
+        year = Integer(params[:year])
+        month = Integer(params[:month])
+      rescue ArgumentError
+        return render json: { error: "Year and month must be valid numbers"},
+                      status: :bad_request
+      end
+      unless month.between?(1, 12)
+        return render json: { error: "Month must be between 1 and 12"},
+                      status: :bad_request
+      end
       start_date = Date.new(year, month, 1)
       end_date = start_date.end_of_month
 
@@ -51,7 +59,7 @@ class Api::ExpensesController < ApplicationController
     {
       id: expense.id,
       description: expense.description,
-      amount: expense.amount.to_f,
+      amount: expense.amount,
       category: expense.category.name,
       date: expense.date&.iso8601,
       created_at: expense.created_at&.iso8601,
